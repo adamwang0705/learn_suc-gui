@@ -1,0 +1,30 @@
+{% extends 'predict/base_index.html' %}
+
+{% block compose %}
+    <div id="selected">
+    {% if behavior_info %}
+        <p> {{ behavior_info|length }} selected items: </p>
+        <ol>
+        {% for item_info in behavior_info %}
+            <li>({{ item_info.type|title }}) {{ item_info.name|title }}</li>
+        {% endfor %}
+        </ol>
+    {% else %}
+        <p>No selected item.</p>
+    {% endif %}
+    </div>
+
+    <div id="displaying">
+    {% if displaying_items %}
+        <p> Choose other {{ displaying_type|title }}: </p>
+        <ol>
+        {% for displaying_item in displaying_items %}
+            <li>{{ displaying_item.name|title }}</li>
+        {% endfor %}
+        </ol>
+    {% else %}
+        <p>No other item to choose.</p>
+    {% endif %}
+    </div>
+
+{% endblock compose %}

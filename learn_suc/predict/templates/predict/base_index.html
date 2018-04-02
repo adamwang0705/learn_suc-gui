@@ -12,13 +12,13 @@
     </header>
     <div id="result_wrapper">
         <div id="success_rate">
-            <p>Current Success Rare: ??.??%</p>
+            <p>Current Success Rare: {{ rate|floatformat:2 }}%</p>
         </div>
     </div>
     <div id="content_wrapper">
         {#  DEGUB only #}
-        {% block types %}
-        {% endblock types %}
+        {% block compose %}
+        {% endblock compose %}
     </div>
     <footer>
         <p>Authors: Daheng Wang, Meng Jiang, Qingkai Zeng, Zachary Eberhart, Nitesh Chawla</p>
