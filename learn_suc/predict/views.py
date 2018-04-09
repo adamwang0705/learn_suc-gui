@@ -8,8 +8,11 @@ from sklearn.externals import joblib
 from .models import Type, Item, Embedding
 
 # Create your views here.
+"""
+Debug only
+"""
 
-"""For debug"""
+
 def helloworld(request):
     return HttpResponse('Hello World. LearnSUC online powered by Django.')
 
@@ -49,76 +52,115 @@ def embedding_detail(request, item_id):
     return HttpResponse('Item {}: -embedding: {};'.format(item_id, embedding.embedding))
 
 
-"""Public interface"""
+"""
+LR model, success rate function, and default behavior
+"""
 lr_model_file = os.path.join('.', 'learn_suc-m2-d64-n10.model.pkl')
 lr_model = joblib.load(lr_model_file)
 
-def predict_success_rate(behavior):
-    # Compute behavior vector
-    behavior_vec = []
-    for item_id in behavior:
-        embedding = Embedding.objects.get(pk=item_id).embedding
-        item_vec = [float(dim) for dim in embedding.split()]
-        behavior_vec.append(item_vec)
-    behavior_vec = np.sum(behavior_vec, axis=0)
 
-    # Compute prediction
-    success_rate = lr_model.predict_proba(behavior_vec.reshape(1, -1))[0][1]
-    return success_rate*100
+def _predict_success_rate(items):
+    if items:
+        # Compute behavior vector
+        behavior_vec = []
+        for item_id in items:
+            embedding_str = Embedding.objects.get(pk=item_id).embedding
+            item_vec = [float(dim) for dim in embedding_str.split()]
+            behavior_vec.append(item_vec)
+        behavior_vec = np.sum(behavior_vec, axis=0)
+
+        # Compute prediction
+        success_rate = lr_model.predict_proba(behavior_vec.reshape(1, -1))[0][1]
+        return success_rate * 100
+    else:
+        return 0
 
 
 # LINE: Large-scale Information Network Embedding
 # Behavior id: 347613
-default_behavior = [2767459, 2906020, 2972072, 3078788, 3095165, 3169331, 3249647, 3255758, 3254437, 3263395, 1382595,
-                    1492387, 1980713, 267563, 569799, 888462, 2127379, 882200, 1391569, 1605587, 178992, 641289,
-                    1779357, 47992, 1986676, 1811546, 1353460]
+default_behavior_items = [2767459, 2906020, 2972072, 3078788, 3095165, 3169331, 3249647, 3255758, 3254437, 3263395,
+                          1382595, 1492387, 1980713, 267563, 569799, 888462, 2127379, 882200, 1391569, 1605587,
+                          178992, 641289, 1779357, 47992, 1986676, 1811546, 1353460]
 
 # default_behavior = [2767459, 2906020, 2972072, 3078788, 3095165, 3169331, 3249647, 3255758, 3254437, 3263395, 1382595,
 #                     1492387, 1980713, 267563, 569799]
 
-default_rate = predict_success_rate(default_behavior)
+default_success_rate = _predict_success_rate(default_behavior_items)
+default_displaying_type = 'author'
+
+
+def _retrieve_items_info(selected_items):
+    items_info = []
+    for item_id in selected_items:
+        item = Item.objects.get(pk=item_id)
+        items_info.append({'item_id': item_id, 'name': item.name, 'type_name': item.type.name})
+    return items_info
+
+
+"""
+Public interface
+"""
+
 
 def index(request):
-    # Reset to default behavior
-    # request.session.setdefault('curr_behavior', default_behavior)
-    # request.session.setdefault('curr_rate', default_rate)
-    request.session['curr_behavior'] = default_behavior
-    request.session['curr_rate'] = default_rate
+    # Reset to default behavior items
+    request.session['selected_items'] = default_behavior_items
+    request.session['selected_success_rate'] = default_success_rate
+    request.session['displaying_type'] = default_displaying_type
 
-    curr_behavior_info = []
-    for item_id in request.session.get('curr_behavior'):
-        item = Item.objects.get(pk=item_id)
-        curr_behavior_info.append({'item_id': item_id, 'name': item.name, 'type': item.type.name})
-
-    displaying_type = 'author'
-    displaying_items = Item.objects.filter(type__name=displaying_type).order_by('name')[:50]
-    context = {'displaying_type': displaying_type,
-               'displaying_items': displaying_items,
-               'curr_behavior_info': curr_behavior_info,
-               'curr_rate': request.session.get('curr_rate')}
-    return render(request, 'predict/compose_behavior.html', context)
+    # Build context dict variable
+    displaying_items = Item.objects.filter(type__name=request.session.get('displaying_type'))\
+        .order_by('name').values_list('id', flat=True)[:1000]
+    context = {'selected_items_info': _retrieve_items_info(request.session.get('selected_items')),
+               'selected_success_rate': request.session.get('selected_success_rate'),
+               'displaying_type': request.session.get('displaying_type'),
+               'displaying_items_info': _retrieve_items_info(displaying_items)}
+    return render(request, 'predict/prediction.html', context)
 
 
 def delete_item(request):
     # Receive delete items
-    delete_items = request.POST.getlist('m_select_delete_item')
+    delete_items = request.POST.getlist('delete_item_multiple_select')
 
-    # Compute current behavior and current rate
-    curr_behavior = request.session.get('curr_behavior')
+    # Remove from selected items and compute new success rate
+    selected_items = request.session.get('selected_items')
     for item in delete_items:  # keep the original items order
-        curr_behavior.remove(int(item))
-    curr_rate = predict_success_rate(curr_behavior)
+        selected_items.remove(int(item))
+    selected_success_rate = _predict_success_rate(selected_items)
 
     # Update session variables
-    request.session['curr_behavior'] = curr_behavior
-    request.session['curr_rate'] = curr_rate
+    request.session['selected_items'] = selected_items
+    request.session['selected_success_rate'] = selected_success_rate
 
-    # Update context variables
-    curr_behavior_info = []
-    for item_id in request.session.get('curr_behavior'):
-        item = Item.objects.get(pk=item_id)
-        curr_behavior_info.append({'item_id': item_id, 'name': item.name, 'type': item.type.name})
+    # Build context dict variable
+    displaying_items = Item.objects.filter(type__name=request.session.get('displaying_type'))\
+        .order_by('name').values_list('id', flat=True)[:1000]
+    context = {'selected_items_info': _retrieve_items_info(request.session.get('selected_items')),
+               'selected_success_rate': request.session.get('selected_success_rate'),
+               'displaying_type': request.session.get('displaying_type'),
+               'displaying_items_info': _retrieve_items_info(displaying_items)}
+    return render(request, 'predict/prediction.html', context)
 
-    context = {'curr_behavior_info': curr_behavior_info,
-               'curr_rate': request.session.get('curr_rate')}
-    return render(request, 'predict/compose_behavior.html', context)
+def add_item(request):
+    # Receive add items
+    add_items = request.POST.getlist('add_item_multiple_select')
+
+    # Add into selected items and compute new success rate
+    selected_items = request.session.get('selected_items')
+    for item in add_items:  # keep the original items order
+        if item not in selected_items:
+            selected_items.append(int(item))
+    selected_success_rate = _predict_success_rate(selected_items)
+
+    # Update session variables
+    request.session['selected_items'] = selected_items
+    request.session['selected_success_rate'] = selected_success_rate
+
+    # Build context dict variable
+    displaying_items = Item.objects.filter(type__name=request.session.get('displaying_type'))\
+        .order_by('name').values_list('id', flat=True)[:1000]
+    context = {'selected_items_info': _retrieve_items_info(request.session.get('selected_items')),
+               'selected_success_rate': request.session.get('selected_success_rate'),
+               'displaying_type': request.session.get('displaying_type'),
+               'displaying_items_info': _retrieve_items_info(displaying_items)}
+    return render(request, 'predict/prediction.html', context)

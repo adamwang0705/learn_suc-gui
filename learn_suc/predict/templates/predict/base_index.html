@@ -10,16 +10,24 @@
     <header>
         <h1>Multi-Type Itemset Embedding for Learning Behavior Success</h1>
     </header>
-    <div id="result_wrapper">
-        <div id="success_rate">
-            <p>Current Success Rare: {{ curr_rate|floatformat:4 }}%</p>
+
+    <div id="content_wrapper">
+        <div id="selected_success_rate_wrapper">
+            {% block selected_success_rate %}
+            {% endblock selected_success_rate %}
+        </div>
+
+        <div id="selected_items_info_wrapper">
+            {% block selected_items_info %}
+            {% endblock selected_items_info %}
+        </div>
+
+        <div id="displaying_items_wrapper">
+            {% block displaying_items_info %}
+            {% endblock displaying_items_info %}
         </div>
     </div>
-    <div id="content_wrapper">
-        {#  DEGUB only #}
-        {% block compose %}
-        {% endblock compose %}
-    </div>
+
     <footer>
         <p>Authors: Daheng Wang, Meng Jiang, Qingkai Zeng, Zachary Eberhart, Nitesh Chawla</p>
         <p>Address: University of Notre Dame, Notre Dame, Indiana, 46556, USA</p>

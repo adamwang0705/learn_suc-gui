@@ -1,0 +1,71 @@
+{% extends 'predict/base_index.html' %}
+
+{% block selected_success_rate %}
+    <div id="selected_success_rate">
+        <p>Current Success Rare: {{ selected_success_rate|floatformat:4 }}%</p>
+    </div>
+{% endblock selected_success_rate %}
+
+{% block selected_items_info %}
+    <div id="selected_items_info">
+    {% if selected_items_info %}
+        <form name="delete_item_form" method="post" action= "{% url 'predict:delete_item' %}">
+            {% csrf_token %}
+            <label for="delete_item_multiple_select">Selected items information:</label>
+            <select multiple="multiple" name="delete_item_multiple_select" id="delete_item_multiple_select" size="20">
+                {% for item_info in selected_items_info %}
+                    {% if item_info.type_name == 'author' or item_info.type_name == 'reference' %}
+                        <option value="{{ item_info.item_id }}">
+                            {{ forloop.counter }} ({{ item_info.type_name }}). {{ item_info.name|title }}
+                        </option>
+                    {% elif item_info.type_name == 'keyword' %}
+                        <option value="{{ item_info.item_id }}">
+                            {{ forloop.counter }} ({{ item_info.type_name }}). {{ item_info.name|lower }}
+                        </option>
+                    {% elif item_info.type_name == 'conference' %}
+                        <option value="{{ item_info.item_id }}">
+                            {{ forloop.counter }} ({{ item_info.type_name }}). {{ item_info.name|upper }}
+                        </option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <input type="submit" value="Delete" />
+        </form>
+    {% else %}
+        <p>No selected item. Please add more items.</p>
+    {% endif %}
+    </div>
+{% endblock selected_items_info %}
+
+{% block displaying_items_info %}
+    <div id="displaying_items">
+    {% if displaying_items_info %}
+        <form name="add_item_form" method="post" action= "{% url 'predict:add_item' %}">
+            {% csrf_token %}
+            <label for="add_item_multiple_select">
+                Choose other {{ displaying_type|lower }}{{ displaying_items|length|pluralize }}:
+            </label>
+            <select multiple="multiple" name="add_item_multiple_select" id="add_item_multiple_select" size="50">
+                {% for item_info in displaying_items_info %}
+                    {% if item_info.type_name == 'author' or item_info.type_name == 'reference' %}
+                        <option value="{{ item_info.item_id }}">
+                            {{ forloop.counter }} ({{ item_info.type_name }}). {{ item_info.name|title }}
+                        </option>
+                    {% elif item_info.type_name == 'keyword' %}
+                        <option value="{{ item_info.item_id }}">
+                            {{ forloop.counter }} ({{ item_info.type_name }}). {{ item_info.name|lower }}
+                        </option>
+                    {% elif item_info.type_name == 'conference' %}
+                        <option value="{{ item_info.item_id }}">
+                            {{ forloop.counter }} ({{ item_info.type_name }}). {{ item_info.name|upper }}
+                        </option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <input type="submit" value="Add" />
+        </form>
+    {% else %}
+        <p>No valid item to choose.</p>
+    {% endif %}
+    </div>
+{% endblock displaying_items_info %}
