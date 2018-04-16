@@ -3,7 +3,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="{% static 'predict/style.css' %}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- jQuery !-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- jQuery UI !-->
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <!-- Local CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'predict/css/style.css' %}" />
     <title>Multi-Type Itemset Embedding for Learning Behavior Success</title>
 </head>
 <body>
@@ -26,6 +33,11 @@
             {% block displaying_items_info %}
             {% endblock displaying_items_info %}
         </div>
+
+        <div id="search_item_wrapper">
+            {% block search_item %}
+            {% endblock search_item %}
+        </div>
     </div>
 
     <footer>
@@ -34,5 +46,7 @@
         <p>Contact: {dwang8,mjiang2,qzeng,zeberhar,nchawla}@nd.edu</p>
         <img src="{% static 'predict/images/academic_mark/PNG/ND_mark_blue_S.png' %}" alt="Notre Dame Academic Mark">
     </footer>
+    <!-- Local JS -->
+    <script type="text/javascript" src="{% static 'predict/js/main.js' %}"></script>
 </body>
 </html>

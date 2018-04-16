@@ -9,7 +9,7 @@
 {% block selected_items_info %}
     <div id="selected_items_info">
     {% if selected_items_info %}
-        <form name="delete_item_form" method="post" action= "{% url 'predict:delete_item' %}">
+        <form name="delete_item_form" method="post" action= "{% url 'predict:delete_multiple_items' %}">
             {% csrf_token %}
             <label for="delete_item_multiple_select">Selected items information:</label>
             <select multiple="multiple" name="delete_item_multiple_select" id="delete_item_multiple_select" size="20">
@@ -38,9 +38,44 @@
 {% endblock selected_items_info %}
 
 {% block displaying_items_info %}
+    <div id="filter_items">
+    {% if type_names %}
+        <form name="filter_items_form" method="get" action= "{% url 'predict:index' %}">
+            {% csrf_token %}
+            <label for="filter_type_select">
+                Filter type:
+            </label>
+            <select name="filter_type_select" id="filter_type_select">
+                {% for type_name in type_names %}
+                    {% if type_name == displaying_type %}
+                        <option value="{{ type_name }}" selected="selected">{{ type_name|lower }}</option>
+                    {% else %}
+                        <option value="{{ type_name }}">{{ type_name|lower }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <label for="filter_fl_select">
+                First letter:
+            </label>
+            <select name="filter_fl_select" id="filter_fl_select">
+                {% for filter_fl in filter_fls %}
+                    {% if filter_fl == displaying_fl %}
+                        <option value="{{ filter_fl }}" selected="selected">{{ filter_fl|lower }}</option>
+                    {% else %}
+                        <option value="{{ filter_fl }}">{{ filter_fl|lower }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <input type="submit" value="Filter" />
+        </form>
+    {% else %}
+        <p>No valid type retrieved.</p>
+    {% endif %}
+    </div>
+
     <div id="displaying_items">
     {% if displaying_items_info %}
-        <form name="add_item_form" method="post" action= "{% url 'predict:add_item' %}">
+        <form name="add_item_form" method="post" action= "{% url 'predict:add_multiple_items' %}">
             {% csrf_token %}
             <label for="add_item_multiple_select">
                 Choose other {{ displaying_type|lower }}{{ displaying_items|length|pluralize }}:
@@ -69,3 +104,15 @@
     {% endif %}
     </div>
 {% endblock displaying_items_info %}
+
+{% block search_item %}
+    <div class="ui-widget" id="search_item">
+        <form name="search_item_form" method="post" action= "{% url 'predict:add_suggested_item' %}">
+            {% csrf_token %}
+            <label for="input_partial_item">Search: </label>
+            <input id="input_partial_item">
+            <input name='suggested_item_id' id="suggested_item_id" type="hidden">
+            <input type="submit" value="Add" />
+        </form>
+    </div>
+{% endblock search_item %}

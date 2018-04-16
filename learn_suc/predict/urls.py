@@ -16,8 +16,9 @@ urlpatterns = [
     # Default
     path('', views.index, name='default'),
     path('index/', views.index, name='index'),
-    # Delete selected item
-    path('index/delete_item/', views.delete_item, name='delete_item'),
-    path('index/add_item/', views.add_item, name='add_item'),
-    # TODO: suggest item
+    # Add, delete, suggest operations on item
+    path('index/delete_multiple_items/', views.delete_multiple_items, name='delete_multiple_items'),
+    path('index/add_multiple_items/', views.add_multiple_items, name='add_multiple_items'),
+    path('index/suggest_item/', views.suggest_item, name='suggest_item'),
+    path('index/add_suggested_item/', views.add_suggested_item, name='add_suggested_item'),
 ]
