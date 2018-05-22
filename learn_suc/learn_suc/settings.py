@@ -25,7 +25,7 @@ SECRET_KEY = '*pgqpo^1gv=*-gr(yhg&0r*vonsn#eanbz1fi_(a5%x$0soq3t'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'adamwang0705.pythonanywhere.com']
 
 
 # Application definition
@@ -124,3 +124,34 @@ STATIC_URL = '/static/'
 # Session
 SESSION_ENGINE = 'django.contrib.sessions.backends.file'
 SESSION_FILE_PATH = os.path.join(BASE_DIR, 'tmp')
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# Cache
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'TIMEOUT': 15 * 60,
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000,
+            'CULL_FREQUENCY': 10,
+        }
+    },
+    'selected_items_cache': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'selected_items_cache',
+        'TIMEOUT': 15 * 60,
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000,
+            'CULL_FREQUENCY': 10,
+        }
+    },
+    'displaying_items_cache': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'displaying_items_cache',
+        'TIMEOUT': 15 * 60,
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000,
+            'CULL_FREQUENCY': 10,
+        }
+    },
+}

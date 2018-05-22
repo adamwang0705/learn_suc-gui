@@ -4,13 +4,13 @@ $(function() {
     print_sys_time();
 
     $("#input_partial_item").autocomplete({
-        source: "/learn_suc/index/suggest_item/",  // Subject to change
+        source: "/learn_suc/index/search_item/",  // Subject to change
         select: function (event, ui) { //item selected
             auto_complete_select_handler(event, ui);
             return false;
         },
         minLength: 2,
-        delay:300
+        delay:200
     })
     .autocomplete("instance")._renderItem = function(ul, item) {
       return $( "<li>" )
@@ -28,5 +28,5 @@ function print_sys_time() {
 function auto_complete_select_handler(event, ui) {
     var selected_item = ui.item;
     $("#input_partial_item").val(selected_item.name);
-    $("#suggested_item_id").val(selected_item.item_id);
+    $("#searched_item_id").val(selected_item.item_id);
 }

@@ -9,10 +9,12 @@
 {% block selected_items_info %}
     <div id="selected_items_info">
     {% if selected_items_info %}
-        <form name="delete_item_form" method="post" action= "{% url 'predict:delete_multiple_items' %}">
+        <form name="delete_items_form" method="post" action= "{% url 'predict:add_or_delete_items' %}">
             {% csrf_token %}
-            <label for="delete_item_multiple_select">Selected items information:</label>
-            <select multiple="multiple" name="delete_item_multiple_select" id="delete_item_multiple_select" size="20">
+            <label for="delete_items_multiple_select" id = "label_delete_items_multiple_select">
+                Selected items information:
+            </label>
+            <select multiple="multiple" name="delete_items_multiple_select" id="delete_items_multiple_select" size="20">
                 {% for item_info in selected_items_info %}
                     {% if item_info.type_name == 'author' or item_info.type_name == 'reference' %}
                         <option value="{{ item_info.item_id }}">
@@ -75,12 +77,12 @@
 
     <div id="displaying_items">
     {% if displaying_items_info %}
-        <form name="add_item_form" method="post" action= "{% url 'predict:add_multiple_items' %}">
+        <form name="add_items_form" method="post" action= "{% url 'predict:add_or_delete_items' %}">
             {% csrf_token %}
-            <label for="add_item_multiple_select">
-                Choose other {{ displaying_type|lower }}{{ displaying_items|length|pluralize }}:
+            <label for="add_items_multiple_select" id="label_add_items_multiple_select">
+                Choose other {{ displaying_type_name|lower }}{{ displaying_items|length|pluralize }}:
             </label>
-            <select multiple="multiple" name="add_item_multiple_select" id="add_item_multiple_select" size="50">
+            <select multiple="multiple" name="add_items_multiple_select" id="add_items_multiple_select" size="50">
                 {% for item_info in displaying_items_info %}
                     {% if item_info.type_name == 'author' or item_info.type_name == 'reference' %}
                         <option value="{{ item_info.item_id }}">
@@ -107,11 +109,13 @@
 
 {% block search_item %}
     <div class="ui-widget" id="search_item">
-        <form name="search_item_form" method="post" action= "{% url 'predict:add_suggested_item' %}">
+        <form name="search_item_form" method="post" action= "{% url 'predict:add_or_delete_items' %}">
             {% csrf_token %}
-            <label for="input_partial_item">Search: </label>
+            <label for="input_partial_item" id="label_input_partial_item">
+                Search:
+            </label>
             <input id="input_partial_item">
-            <input name='suggested_item_id' id="suggested_item_id" type="hidden">
+            <input name='searched_item_id' id="searched_item_id" type="hidden">
             <input type="submit" value="Add" />
         </form>
     </div>

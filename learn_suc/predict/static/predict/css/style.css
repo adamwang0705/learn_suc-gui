@@ -1,3 +1,83 @@
 option {
-    color: blue;
+    color: #1A5276;
+    /*font-size: 14px;*/
+
+
+}
+body{
+	font-family: Verdana,Arial,sans-serif;
+	color: #1A5276;
+	/*background-color: #34495E;*/
+}
+
+h1{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin:auto;
+	height: 100px;
+	text-align: center;
+	text-shadow: 1px 1px #C0C0C0;
+	font-family: sans-serif;
+	color: #424949;
+	background-color: #D4E6F1;
+}
+
+#selected_success_rate_wrapper{
+	color: #FF0000;
+	font-weight: bold;
+	text-align: center;
+	font-size: 24px;
+}
+
+#content_wrapper{
+	font-size: 1em;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+}
+
+#content_wrapper > div{
+	padding: 40px;
+	/*display: table-cell;*/
+	/*width: auto;*/
+	/*vertical-align: middle;*/
+	/*align-content: center;*/
+	/*font-size: 16px;*/
+}
+
+#label_delete_items_multiple_select, #delete_items_multiple_select{
+	display: block;
+	padding-bottom: 5px;
+	/*max-width: 60%*/
+}
+
+#label_input_partial_item, #searched_item_id{
+	display: block;
+	padding-bottom: 5px;
+}
+
+#label_add_items_multiple_select, #add_items_multiple_select{
+	display: block;
+	padding-bottom: 5px;
+	/*max-width: 60%*/
+}
+
+footer{
+	padding-top: 80px;
+	margin:auto;
+	font-size: 12px;
+	color: #1A5276;
+	text-align: center;
+	line-height: 20%;
+	font-family: serif;
+}
+
+p.addr{
+	font-style: italic;
+}
+
+p.contact{
+	/*font-family: Courier;*/
+	font-style: italic;
 }
