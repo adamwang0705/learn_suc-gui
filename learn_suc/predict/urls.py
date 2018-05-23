@@ -13,6 +13,6 @@ urlpatterns = [
     path('', views.index, name='default'),
     path('index/', views.index, name='index'),
     # Add, delete, suggest operations on item
-    path('index/add_or_delete_items/', views.add_or_delete_items, name='add_or_delete_items'),
+    # path('index/add_or_delete_items/', views.add_or_delete_items, name='add_or_delete_items'),
     path('index/search_item/', views.search_item, name='search_item'),
 ]
