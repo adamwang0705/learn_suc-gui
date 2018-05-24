@@ -38,7 +38,7 @@ h1{
 }
 
 #content_wrapper > div{
-	padding: 40px 60px 40px 60px;
+	padding: 40px;
 	/*display: table-cell;*/
 	/*width: auto;*/
 	/*vertical-align: middle;*/
@@ -46,34 +46,22 @@ h1{
 	/*font-size: 16px;*/
 }
 
-#label_add_items_multiple_select, #add_items_multiple_select{
+#label_delete_items_multiple_select, #delete_items_multiple_select{
 	display: block;
-	width: auto;
 	padding-bottom: 5px;
-}
-
-#add_items_multiple_select{
-	overflow: auto;
-	width: 560px;
+	/*max-width: 60%*/
 }
 
 #label_input_partial_item, #searched_item_id{
 	display: block;
-	width: auto;
 	padding-bottom: 5px;
 }
 
-#label_delete_items_multiple_select, #delete_items_multiple_select{
+#label_add_items_multiple_select, #add_items_multiple_select{
 	display: block;
-	width: auto;
 	padding-bottom: 5px;
+	/*max-width: 60%*/
 }
-
-#delete_items_multiple_select{
-	overflow: auto;
-	width: 560px;
-}
-
 
 footer{
 	padding-top: 80px;

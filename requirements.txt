@@ -1,5 +1,10 @@
 Django==2.0.3
+gunicorn==19.8.1
 numpy==1.14.2
+psycopg2==2.7.4
+psycopg2-binary==2.7.4
+python-memcached==1.59
 pytz==2018.3
 scikit-learn==0.19.1
 scipy==1.0.1
+six==1.11.0

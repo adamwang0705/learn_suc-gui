@@ -44,8 +44,8 @@ Performance schema
 """
 class Item(models.Model):
     id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=500)
-    name_fl = models.CharField(max_length=1)
+    name = models.CharField(max_length=1000)
+    name_fl = models.CharField(max_length=2)
     type = models.SmallIntegerField()
     embedding = models.CharField(max_length=2000)
 

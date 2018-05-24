@@ -74,12 +74,12 @@ WSGI_APPLICATION = 'learn_suc.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
 
 # Password validation
@@ -120,41 +120,98 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# CUSTOM
-# Session
-SESSION_ENGINE = 'django.contrib.sessions.backends.file'
-SESSION_FILE_PATH = os.path.join(BASE_DIR, 'tmp')
+
+"""
+=== CUSTOM ===
+"""
+
+''' PostgreSQL Database '''
+# https://docs.djangoproject.com/en/2.0/ref/settings/#databases
+# https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-your-django-application-on-ubuntu-14-04
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'learnsuc_db',
+        'USER': 'learnsuc',
+        'PASSWORD': 'learnsuc',
+        'HOST': '127.0.0.1',
+        'PORT': '',
+    }
+}
+
+
+''' Session '''
+# Default file based sessions
+# SESSION_ENGINE = 'django.contrib.sessions.backends.file'
+# SESSION_FILE_PATH = os.path.join(BASE_DIR, 'tmp')
+
+# High performance cached sessions
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'session_cache'  # Depends on cache setting
+
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
-# Cache
+
+''' Cache '''
+# https://docs.djangoproject.com/en/2.0/topics/cache/
+
+# Default local memory cache
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+#         'TIMEOUT': 15 * 60,
+#         'OPTIONS': {
+#             'MAX_ENTRIES': 1000,
+#             'CULL_FREQUENCY': 10,
+#         }
+#     },
+#     'selected_items_cache': {
+#         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+#         'LOCATION': 'selected_items_cache',
+#         'TIMEOUT': 15 * 60,
+#         'OPTIONS': {
+#             'MAX_ENTRIES': 1000,
+#             'CULL_FREQUENCY': 10,
+#         }
+#     },
+# }
+
+# High-performance Memcached
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
         'TIMEOUT': 15 * 60,
         'OPTIONS': {
-            'MAX_ENTRIES': 1000,
-            'CULL_FREQUENCY': 10,
+            'server_max_value_length': 1024 * 1024 * 128,
+        }
+    },
+    'session_cache': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+        'TIMEOUT': 30 * 60,
+        'OPTIONS': {
+            'server_max_value_length': 1024 * 1024 * 64,
         }
     },
     'selected_items_cache': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'selected_items_cache',
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
         'TIMEOUT': 15 * 60,
         'OPTIONS': {
-            'MAX_ENTRIES': 1000,
-            'CULL_FREQUENCY': 10,
-        }
-    },
-    'displaying_items_cache': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'displaying_items_cache',
-        'TIMEOUT': 15 * 60,
-        'OPTIONS': {
-            'MAX_ENTRIES': 1000,
-            'CULL_FREQUENCY': 10,
+            'server_max_value_length': 1024 * 1024 * 128,
         }
     },
 }
 
-# Deployment
+
+''' Deployment '''
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# Warnings
+# SECURE_CONTENT_TYPE_NOSNIFF = True
+# SECURE_BROWSER_XSS_FILTER = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+# X_FRAME_OPTIONS = 'DENY'
+# DEBUG = False

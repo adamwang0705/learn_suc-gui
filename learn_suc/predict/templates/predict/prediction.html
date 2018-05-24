@@ -2,7 +2,7 @@
 
 {% block selected_success_rate %}
     <div id="selected_success_rate">
-        <p>Current Success Rare: {{ selected_success_rate|floatformat:4 }}%</p>
+        <p>Current Success Rate: {{ selected_success_rate|floatformat:4 }}%</p>
     </div>
 {% endblock selected_success_rate %}
 
@@ -14,7 +14,7 @@
             <label for="delete_items_multiple_select" id = "label_delete_items_multiple_select">
                 Selected items information:
             </label>
-            <select multiple="multiple" name="delete_items_multiple_select" id="delete_items_multiple_select" size="20">
+            <select multiple="multiple" name="delete_items_multiple_select" id="delete_items_multiple_select" size="25">
                 {% for item_info in selected_items_info %}
                     {% if item_info.type_name == 'author' or item_info.type_name == 'reference' %}
                         <option value="{{ item_info.item_id }}">
@@ -82,7 +82,7 @@
             <label for="add_items_multiple_select" id="label_add_items_multiple_select">
                 Choose other {{ displaying_type_name|lower }}{{ displaying_items|length|pluralize }}:
             </label>
-            <select multiple="multiple" name="add_items_multiple_select" id="add_items_multiple_select" size="50">
+            <select multiple="multiple" name="add_items_multiple_select" id="add_items_multiple_select" size="20">
                 {% for item_info in displaying_items_info %}
                     {% if item_info.type_name == 'author' or item_info.type_name == 'reference' %}
                         <option value="{{ item_info.item_id }}">

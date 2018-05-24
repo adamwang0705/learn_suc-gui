@@ -17,8 +17,6 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 """
 Debug only
 """
-
-
 def helloworld(request):
     return HttpResponse('Hello World. LearnSUC online powered by Django.')
 
